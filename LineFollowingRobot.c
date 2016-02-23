@@ -17,7 +17,7 @@ int I = 0;
 int D = 0;
 int prevError = 0;
 
-int calcCorrection(int sensorPos,int desiredPos ){
+ int calcCorrection(int sensorPos,int desiredPos){
   const int kP = 30,kI = 7,kD = 4;
   int error = sensorPos-desiredPos;
   P = error * kP;
@@ -31,7 +31,28 @@ int calcCorrection(int sensorPos,int desiredPos ){
 
 int sensorPos(){
   const int threshold;
-if()
+  if(SensorValue[line3] > threshold){
+    return 3;
+  }
+  if(SensorValue[line2] > threshold){
+    return 2;
+  }
+  if(SensorValue[line1] > threshold){
+    return 1;
+  }
+  if(SensorValue[line0] > threshold){
+    return 0;
+  }
+  if(SensorValue[lineNeg1] > threshold){
+    return -1;
+  }
+  if(SensorValue[lineNeg2] > threshold){
+    return -2;
+  }
+  if(SensorValue[lineNeg3] > threshold){
+    return -3;
+  }
+}
 
 }
 
