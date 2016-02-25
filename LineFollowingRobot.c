@@ -17,7 +17,7 @@ int D ;
 int prevError ;
 
  float calcCorrection(int sensorPos,int desiredPos){
-  const float kP = 40,kI = 1,kD = 10;
+  const float kP = 30,kI = .3,kD = 10;
   int error = desiredPos-sensorPos;
   P = error * kP;
   I += error;
@@ -70,7 +70,8 @@ int getSensorPos(){
 
 
 task main(){
-	bool isDriverActive = true;
+	bool isDriverActive = false;
+  int sensorPos = 0;
 	motor[illuminator] = 0;
   int frontMotorSpeed = 50, rearMotorSpeed = 0;
   while(isDriverActive){
@@ -86,9 +87,15 @@ task main(){
 
 
   while(getSensorPos()!=7 && !isDriverActive ){
-    rearMotorSpeed=calcCorrection(0,getSensorPos());
-    motor[motorDrive] = 0 + rearMotorSpeed;
+    sensorPos = getSensorPos();
+    rearMotorSpeed=calcCorrection(0, sensorPos);
+    motor[motorSteer] = 0 + rearMotorSpeed;
+    if(rearMotorSpeed != 0){
+      motor[motorDrive] = 20;
+    }
+    else{
     motor[motorSteer] = frontMotorSpeed;
+  }
   	if(vexRT[Btn6U] == 1){
   		isDriverActive = true;
   	}
