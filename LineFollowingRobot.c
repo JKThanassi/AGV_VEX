@@ -16,13 +16,13 @@ int D = 0;
 int prevError = 0;
 
  int calcCorrection(int sensorPos,int desiredPos){
-  const int kP = 30,kI = 7,kD = 4;
+  const int kP = .30,kI = .7,kD = .4;
   int error = sensorPos-desiredPos;
   P = error * kP;
   I += error;
   I *=kI;
   D = error - prevError;
-
+  prevError = error;
   return P+I+D;
 
 }
@@ -72,8 +72,8 @@ task main(){
   int frontMotorSpeed = 50, rearMotorSpeed = 0;
   while(getSensorPos()!=7){
     rearMotorSpeed+=calcCorrection(0,getSensorPos());
-    motor[motorSteer] = rearMotorSpeed;
-    motor[motorDrive] = frontMotorSpeed;
+    motor[motorDrive] = rearMotorSpeed;
+    motor[motorSteer] = frontMotorSpeed;
   }
 
 }
