@@ -94,6 +94,7 @@ task main(){
       motor[motorDrive] = 20;
     }
     else{
+      //TODO change this to motorDrive
     motor[motorSteer] = frontMotorSpeed;
   }
   	if(vexRT[Btn6U] == 1){
