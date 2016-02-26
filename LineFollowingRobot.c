@@ -18,7 +18,7 @@ int prevError;
 float prevPID;
 
  float calcCorrection(int sensorPos,int desiredPos){
-  const float kP = 25,kI = .2,kD = 10;
+  const float kP = 30,kI = .2,kD = 10;
   float PID;
   if(sensorPos <= 3){
   int error = desiredPos-sensorPos;
