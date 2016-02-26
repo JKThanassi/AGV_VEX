@@ -99,7 +99,7 @@ task main(){
   	if(vexRT[Btn6U] == 1){
   		isDriverActive = true;
   	}
-    wait1Msec(50);
+    wait1Msec(5);
    }
 
 }
