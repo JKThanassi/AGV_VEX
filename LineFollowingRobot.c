@@ -13,12 +13,12 @@
 //globals cause why not
 int P;
 float I;
-int D;
+float D;
 int prevError;
 float prevPID;
 
  float calcCorrection(int sensorPos,int desiredPos){
-  const float kP = 30,kI = .2,kD = 10;
+  const float kP = 25,kI = .2,kD = 100;
   float PID;
   if(sensorPos <= 3){
   int error = desiredPos-sensorPos;
@@ -86,7 +86,7 @@ task main(){
   D=0;
   prevError=0;
   prevPID = 0;
-	bool isDriverActive = true;
+	bool isDriverActive = false;
   int sensorPos = 0;
 	motor[illuminator] = 0;
   int frontMotorSpeed = 35, rearMotorSpeed = 0;
