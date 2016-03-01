@@ -35,8 +35,11 @@ float prevPID;
   	prevPID = PID;
   	return PID;
   }
+  else if(sensorPos == 7){
+  return 0;
+  }
   else{
-  return prevPID;
+    return prevPID;
   }
 }
 
@@ -45,6 +48,16 @@ float prevPID;
 //this function returns the value of the sensor currently above the black line
 int getSensorPos(){
   const int threshold = 1800;
+  //this statement checks if the sensor array has encountered a horizontal black line
+  if (SensorValue[lineNeg3] > threshold
+    && SensorValue[lineNeg2] > threshold
+    && SensorValue[lineNeg1] > threshold
+    && SensorValue[line0] > threshold
+    && SensorValue[line1] > threshold
+    && SensorValue[line2] > threshold
+    && SensorValue[line3] > threshold) {
+    return 7;
+  }
   if(SensorValue[line3] > threshold){
     return 3;
   }
@@ -66,16 +79,7 @@ int getSensorPos(){
   if(SensorValue[lineNeg3] > threshold){
     return -3;
   }
-  //this statement checks if the sensor array has encountered a horizontal black line
-  if (SensorValue[lineNeg3] > threshold
-    && SensorValue[lineNeg2] > threshold
-    && SensorValue[lineNeg1] > threshold
-    && SensorValue[line0] > threshold
-    && SensorValue[line1] > threshold
-    && SensorValue[line2] > threshold
-    && SensorValue[line3] > threshold) {
-    return 7;
-  }
+
   //returns 9 when none of the sensors are above the line
   else{
    	return 9;
@@ -107,13 +111,18 @@ task main(){
   }
 
 
-  while(getSensorPos()!=7 && !isDriverActive ){
+  while(!isDriverActive ){
     sensorPos = getSensorPos();
     rearMotorSpeed=calcCorrection(sensorPos, 0);
     motor[motorSteer] = 0 + rearMotorSpeed;
     if(sensorPos == 9){
     motor[motorDrive] = frontMotorSpeed*.75;
     motor[motorSteer] = 0 + (rearMotorSpeed*2);
+    }
+    else if(sensorPos == 7 && prevPID<28){
+      motor[motorSteer] = 0;
+      motor[motorDrive] = 0;
+      wait1Msec(3000);
     }
     else{
       motor[motorSteer] = 0 + rearMotorSpeed;
