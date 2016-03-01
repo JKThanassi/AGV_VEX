@@ -17,6 +17,10 @@ float D;
 int prevError;
 float prevPID;
 
+/**
+@param sensorPos the value of the sensor currently above the line
+@param desiredPos the sensor that you want to be above the line
+*/
  float calcCorrection(int sensorPos,int desiredPos){
   const float kP = 25,kI = .2,kD = 100;
   float PID;
@@ -38,9 +42,9 @@ float prevPID;
 
 
 
-
+//this function returns the value of the sensor currently above the black line
 int getSensorPos(){
-  const int threshold = 1600;
+  const int threshold = 1800;
   if(SensorValue[line3] > threshold){
     return 3;
   }
@@ -72,6 +76,7 @@ int getSensorPos(){
     && SensorValue[line3] > threshold) {
     return 7;
   }
+  //returns 9 when none of the sensors are above the line
   else{
    	return 9;
   }
@@ -86,10 +91,10 @@ task main(){
   D=0;
   prevError=0;
   prevPID = 0;
-	bool isDriverActive = false;
+	bool isDriverActive = true;
   int sensorPos = 0;
 	motor[illuminator] = 0;
-  int frontMotorSpeed = 35, rearMotorSpeed = 0;
+  int frontMotorSpeed = 33, rearMotorSpeed = 0;
   while(isDriverActive){
   	motor[motorDrive] = vexRT[Ch2];
   	motor[motorSteer] = vexRT[Ch1];
@@ -114,13 +119,6 @@ task main(){
       motor[motorSteer] = 0 + rearMotorSpeed;
     	motor[motorDrive] = frontMotorSpeed;
     }
-    // if(rearMotorSpeed != 0){
-    //   motor[motorDrive] = 20;
-    // }
-  //   else{
-  //     //TODO change this to motorDrive
-  //   motor[motorSteer] = rearMotorSpeed;
-  // }
   	if(vexRT[Btn6U] == 1){
   		isDriverActive = true;
   	}
