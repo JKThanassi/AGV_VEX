@@ -1,4 +1,4 @@
-#pragma config(Sensor, in1,    line3,          sensorLineFollower)
+#pragma config(Sensor, in1,    line3,          sensorNone)
 #pragma config(Sensor, in2,    line2,          sensorLineFollower)
 #pragma config(Sensor, in3,    line1,          sensorLineFollower)
 #pragma config(Sensor, in4,    line0,          sensorLineFollower)
@@ -96,14 +96,23 @@ task main(){
 	D=0;
 	prevError=0;
 	prevPID = 0;
+	//set to false if you want to bypass driver control and go straight to autonomus
+	//generally good for debugging and if you want to hook directly to the computer
 	bool isDriverActive = false;
 	int sensorPos = 0;
 	int ultraVal;
 	motor[illuminator] = 0;
-	int frontMotorSpeed = 33, rearMotorSpeed = 0;
+	int frontMotorSpeed = 60, rearMotorSpeed = 0;
 	while(isDriverActive){
 		motor[motorDrive] = vexRT[Ch2];
 		motor[motorSteer] = vexRT[Ch1];
+		clearLCDLine(0);
+		clearLCDLine(1);
+		displayLCDCenteredString(0,"Front Rear");
+		displayLCDNumber(1,3,motor[motorDrive]);
+		//displayLCDString(1,0,"Rear");
+		displayLCDNumber(1,6,motor[motorSteer]);
+
 
 		if(vexRT[Btn6U] == 1){
 			isDriverActive = false;
@@ -113,7 +122,7 @@ task main(){
 	}
 
 
-	while(!isDriverActive ){
+	while(!isDriverActive){
 		sensorPos = getSensorPos();
 		ultraVal = SensorValue[ultra];
 		rearMotorSpeed=calcCorrection(sensorPos, 0);
@@ -130,7 +139,7 @@ task main(){
 		}
 		else if(sensorPos == 9){
 			motor[motorDrive] = frontMotorSpeed*.75;
-			motor[motorSteer] = 0 + (rearMotorSpeed*2);
+			motor[motorSteer] = 0 + (rearMotorSpeed);
 		}
 		else if(sensorPos == 7 && prevPID<28){
 			motor[motorSteer] = 0;
@@ -143,8 +152,19 @@ task main(){
 			motor[motorDrive] = frontMotorSpeed;
 		}
 		if(vexRT[Btn6U] == 1){
-			isDriverActive = true;
+			isDriverActive = false;
 		}
+		clearLCDLine(0);
+		clearLCDLine(1);
+		displayLCDString(0,0,"P:");
+		displayLCDNumber(0,2,P);
+		displayLCDString(0,7,"I:");
+		displayLCDNumber(0,9,I);
+		displayLCDString(0,11,"D:");
+		displayLCDNumber(0,13,D);
+		displayLCDString(1,0,"v:");
+		displayLCDNumber(1,2,nAvgBatteryLevel,4);
+
 		wait1Msec(5);
 	}
 
